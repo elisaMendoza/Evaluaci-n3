@@ -1,0 +1,17 @@
+# Usamos Ubuntu como imagen base
+FROM ubuntu:20.04
+# Configuración para evitar interactividad durante la instalación
+ENV DEBIAN_FRONTEND=noninteractive
+# Actualizar los paquetes e instalar MariaDB
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y mariadb-server && \
+    apt-get clean
+# Configuración de MariaDB 
+RUN mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+# Crear un archivo de configuración para MariaDB
+COPY my.cnf /etc/mysql/my.cnf
+# Exponer el puerto 3306 para la base de datos MariaDB
+EXPOSE 3306
+
+# Establecer el comando predeterminado para iniciar MariaDB
+CMD ["mysqld_safe"]
